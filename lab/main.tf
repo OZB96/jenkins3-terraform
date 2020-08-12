@@ -181,6 +181,20 @@ resource "aws_instance" "webserver" {
   associate_public_ip_address = true
   tags                        = module.tags_webserver.tags
   depends_on                  = [aws_instance.api]
+  provisioner "remote-exec" {
+    inline = [
+      'echo " api ip is ${aws_instance.api.0.public_ip}" > /home/ubuntu/api_ip.txt',
+    ]
+  connection {
+     type        = "ssh"
+     user        = "ubuntu"
+     host        = self.public_ip
+     private_key = file(var.private_key_path)
+   }
+
+ }
+
+
 }
 
 resource "aws_instance" "api" {
