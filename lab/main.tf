@@ -55,8 +55,8 @@ resource "aws_vpc" "lab" {
   enable_dns_hostnames = true
 }
 
-resource "aws_route53_zone" "bryan_dobc" {
-  name = "bryan.dobc"
+resource "aws_route53_zone" "omar_dobc" {
+  name = "omar.dobc"
   tags = module.tags_network.tags
 
   vpc {
@@ -155,12 +155,21 @@ resource "aws_key_pair" "lab_keypair" {
 }
 
 resource "aws_route53_record" "webserver" {
-  zone_id = aws_route53_zone.bryan_dobc.id
+  zone_id = aws_route53_zone.omar_dobc.id
   name    = "webserver"
   type    = "A"
   ttl     = 300
-  records = [aws_instance.webserver.0.private_ip]
+  records = [aws_instance.webserver.0.public_ip]
 }
+
+resource "aws_route53_record" "api" {
+  zone_id = aws_route53_zone.omar_dobc.id
+  name    = "api"
+  type    = "A"
+  ttl     = 300
+  records = [aws_instance.api.0.public_ip]
+}
+
 
 resource "aws_instance" "webserver" {
   count                       = 1
