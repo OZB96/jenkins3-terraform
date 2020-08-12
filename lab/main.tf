@@ -182,9 +182,7 @@ resource "aws_instance" "webserver" {
   tags                        = module.tags_webserver.tags
   depends_on                  = [aws_instance.api]
   provisioner "local-exec" {
-    inline = [
-      "echo ${aws_instance.api.0.public_ip} > /home/ubuntu/api_ip.txt",
-    ]
+    command = "echo ${aws_instance.api.0.public_ip} > /home/ubuntu/api_ip.txt",
   connection {
      type        = "ssh"
      user        = "ubuntu"
